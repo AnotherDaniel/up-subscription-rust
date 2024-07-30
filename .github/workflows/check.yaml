@@ -109,7 +109,7 @@ jobs:
           toolchain: ${{ env.RUST_TOOLCHAIN }}
       - name: Run rustdoc
         run: |
-          cargo doc --package ${{ inputs.package }} --no-deps --all-features
+          cargo doc --package ${{ inputs.package || '"*"' }} --no-deps --all-features
 
   feature-check:
     # Comprehensive check on dependencies for all feature flag combinations, excluding development dependencies
