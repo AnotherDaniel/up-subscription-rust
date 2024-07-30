@@ -30,7 +30,7 @@ on:
       package:
         description: "Which rust package to check"
         required: false
-        default: '"*"'
+        default: '"*"'  # for some reason, this default is ignored, so we have to repeat the pattern below
         type: string
     outputs:
       test_results_url:
