@@ -26,6 +26,12 @@ on:
       - "Cargo.*"
       - "deny.toml"
   workflow_call:
+    inputs:
+      package:
+        description: "Which rust package to check"
+        required: false
+        default: '*'
+        type: string
     outputs:
       test_results_url:
         description: "URL of the test results artifact"
@@ -33,7 +39,6 @@ on:
       doctest_results_url:
         description: "URL of the doctest results artifact"
         value: ${{ jobs.doctest.outputs.test_results_url }}
-  workflow_dispatch:
 
 concurrency:
   group: ${{ github.ref }}-${{ github.workflow }}
@@ -66,7 +71,7 @@ jobs:
         toolchain: ${{ env.RUST_TOOLCHAIN }}
     - name: Run cargo check
       run: |
-        cargo check --all --tests
+        cargo check --package ${{ inputs.package }} --all --tests
 
   fmt:
     runs-on: ubuntu-latest
@@ -78,7 +83,7 @@ jobs:
           components: rustfmt
       - name: Run cargo fmt
         run: |
-          cargo fmt --all -- --check
+          cargo fmt --package ${{ inputs.package }} --all -- --check
 
   clippy:
     runs-on: ubuntu-latest
@@ -104,7 +109,7 @@ jobs:
           toolchain: ${{ env.RUST_TOOLCHAIN }}
       - name: Run rustdoc
         run: |
-          cargo doc --no-deps --all-features
+          cargo doc --package ${{ inputs.package }} --no-deps --all-features
 
   feature-check:
     # Comprehensive check on dependencies for all feature flag combinations, excluding development dependencies
@@ -119,7 +124,7 @@ jobs:
       - uses: taiki-e/install-action@cargo-hack
       - name: Run cargo hack powerset
         run: |
-          cargo hack check --feature-powerset --no-dev-deps
+          cargo hack --package ${{ inputs.package }} check --feature-powerset --no-dev-deps
 
   nextest:
     # Subset of feature-combos, on only one OS - more complete testing in test-featurematrix.yaml
@@ -141,7 +146,7 @@ jobs:
       - uses: taiki-e/install-action@nextest
       - name: Run cargo nextest
         run: |
-          cargo nextest run --message-format libtest-json-plus ${{ matrix.feature-flags }} > testresults${{ matrix.feature-flags }}.json
+          cargo nextest run --package ${{ inputs.package }} --message-format libtest-json-plus ${{ matrix.feature-flags }} > testresults${{ matrix.feature-flags }}.json
       - name: Upload all-features test results artifact
         id: test_results
         if: matrix.feature-flags == '--all-features'
@@ -164,7 +169,7 @@ jobs:
           toolchain: ${{ env.RUST_TOOLCHAIN }}
       - name: Run doc tests
         run: |
-          RUSTC_BOOTSTRAP=1 cargo test --doc --all-features -- -Z unstable-options --format json --report-time > doctestresults--all-features.json
+          RUSTC_BOOTSTRAP=1 cargo test --package ${{ inputs.package }} --doc --all-features -- -Z unstable-options --format json --report-time > doctestresults--all-features.json
       - name: Upload doctest results artifact
         id: doctest_results
         uses: actions/upload-artifact@v4
