@@ -114,6 +114,8 @@ jobs:
   feature-check:
     # Comprehensive check on dependencies for all feature flag combinations, excluding development dependencies
     needs: check
+    # do not run for package 'up-subscription' - the cargo hack module does not properly support --package="*" at the moment, so different approach than the other instances
+    if: inputs.package != 'up-subscription'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
