@@ -124,7 +124,7 @@ jobs:
       - uses: taiki-e/install-action@cargo-hack
       - name: Run cargo hack powerset
         run: |
-          cargo hack --package ${{ inputs.package || '"*"' }} check --feature-powerset --no-dev-deps
+          cargo hack check --feature-powerset --no-dev-deps
 
   nextest:
     # Subset of feature-combos, on only one OS - more complete testing in test-featurematrix.yaml
