@@ -23,7 +23,7 @@ on:
       package:
         description: "Which rust package to check"
         required: false
-        default: '*'
+        default: "*"
         type: string
     outputs:
       test_coverage_url:
