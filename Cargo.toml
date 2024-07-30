@@ -26,7 +26,7 @@ license = "Apache-2.0"
 readme = "README.md"
 repository = "https://github.com/eclipse-uprotocol/up-subscription-rust"
 rust-version = "1.80.0"
-version = "0.1.0"
+version = "0.1.3"
 
 [workspace.dependencies]
 async-mutex = { version = "1.4" }
