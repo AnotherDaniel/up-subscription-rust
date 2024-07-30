@@ -241,7 +241,7 @@ mod tests {
             assert!(result.is_ok());
 
             // Verify operation result content
-            let subscription_status = result.unwrap();
+            let _subscription_status = result.unwrap();
 
             // TODO Revisit with next release of up-rust!
             // assert_eq!(subscription_status.state.unwrap(), State::SUBSCRIBED);
